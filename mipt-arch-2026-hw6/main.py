@@ -1,20 +1,27 @@
-import asyncio
-from converters import *
+from converters import UsdConverter
 
-def main():    
-    amount = int(input('Введите значение в USD: \n'))
-    
-    converter = UsdRubConverter()
-    print(f"{amount} USD to RUB: {converter.convert_usd_to_rub(amount)}")
-    
-    converter = UsdEurConverter()
-    print(f"{amount} USD to EUR: {converter.convert_usd_to_eur(amount)}")
-    
-    converter = UsdGbpConverter()
-    print(f"{amount} USD to GBP: {converter.convert_usd_to_gbp(amount)}")
-    
-    converter = UsdCnyConverter()
-    print(f"{amount} USD to CNY: {converter.convert_usd_to_cny(amount)}")
+
+def main():
+    try:
+        amount = float(input('Введите значение в USD: '))
+    except ValueError:
+        print("Ошибка: введите корректное число")
+        return
+
+    converter = UsdConverter()
+
+    if not converter.rates:
+        print("Ошибка: не удалось загрузить курсы валют")
+        return
+
+    currencies = ['RUB', 'EUR', 'GBP', 'CNY']
+
+    print(f"\n{amount} USD:")
+    for currency in currencies:
+        result = converter.convert(amount, currency)
+        if result:
+            print(f"  {currency}: {result:.2f}")
+
 
 if __name__ == "__main__":
     main()
